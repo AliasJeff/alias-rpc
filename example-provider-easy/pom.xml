@@ -11,7 +11,7 @@
     <dependencies>
         <dependency>
             <groupId>com.alias</groupId>
-            <artifactId>alias-rpc-core</artifactId>
+            <artifactId>alias-rpc-easy</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
