@@ -1,10 +1,12 @@
 package com.alias.server;
 
+import com.alias.RpcApplication;
 import com.alias.model.RpcRequest;
 import com.alias.model.RpcResponse;
 import com.alias.registry.LocalRegistry;
 import com.alias.serializer.JdkSerializer;
 import com.alias.serializer.Serializer;
+import com.alias.serializer.SerializerFactory;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
@@ -24,7 +26,7 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
     public void handle(HttpServerRequest request) {
 
         // Create a new Serializer instance
-        final Serializer serializer = new JdkSerializer();
+        final Serializer serializer = SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
 
         // Record log
         System.out.println("Received request: " + request.method() + " " + request.uri());

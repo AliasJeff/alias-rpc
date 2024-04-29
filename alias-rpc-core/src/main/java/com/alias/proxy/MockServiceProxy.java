@@ -48,7 +48,7 @@ public class MockServiceProxy implements InvocationHandler {
             } else if (type == double.class) {
                 return 0.0D;
             } else if (type == char.class) {
-                return '\u0000';
+                return "\u0000";
             }
         }
         // Object type

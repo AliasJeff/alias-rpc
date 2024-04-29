@@ -1,5 +1,6 @@
 package com.alias.config;
 
+import com.alias.serializer.SerializerKeys;
 import lombok.Data;
 
 /**
@@ -19,4 +20,6 @@ public class RpcConfig {
     private String serverPort = "8201";
 
     private boolean mock = false;
+
+    private String serializer = SerializerKeys.JDK;
 }
