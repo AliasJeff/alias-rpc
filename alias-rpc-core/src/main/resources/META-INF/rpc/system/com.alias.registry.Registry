@@ -1,1 +1,2 @@
 etcd=com.alias.registry.EtcdRegistry
+zookeeper=com.alias.registry.ZooKeeperRegistry
