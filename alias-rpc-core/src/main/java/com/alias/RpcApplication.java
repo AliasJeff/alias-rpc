@@ -1,7 +1,10 @@
 package com.alias;
 
+import com.alias.config.RegistryConfig;
 import com.alias.config.RpcConfig;
 import com.alias.constant.RpcConstant;
+import com.alias.registry.Registry;
+import com.alias.registry.RegistryFactory;
 import com.alias.utils.ConfigUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,6 +26,12 @@ public class RpcApplication {
     public static void init(RpcConfig newRpcConfig) {
         rpcConfig = newRpcConfig;
         log.info("Init RPC with config: {}", newRpcConfig.toString());
+
+        // Init Registry
+        RegistryConfig registryConfig = rpcConfig.getRegistryConfig();
+        Registry registry = RegistryFactory.getInstance(registryConfig.getRegistry());
+        registry.init(registryConfig);
+        log.info("Init registry success, config: {}", registryConfig);
     }
 
     /**

@@ -2,8 +2,6 @@ package com.alias.serializer;
 
 import com.alias.spi.SpiLoader;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Serializer Factory (Factory Pattern + Singleton Pattern)

@@ -5,7 +5,7 @@ import java.io.*;
 /**
  * JDK serializer
  */
-public class JdkSerializer implements Serializer{
+public class JdkSerializer implements Serializer {
     @Override
     public <T> byte[] serialize(T object) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

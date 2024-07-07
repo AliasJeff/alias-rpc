@@ -17,9 +17,14 @@ public class RpcConfig {
 
     private String serverHost = "localhost";
 
-    private String serverPort = "8201";
+    private Integer serverPort = 8201;
 
     private boolean mock = false;
+
+    /**
+     * Registry config
+     */
+    private RegistryConfig registryConfig = new RegistryConfig();
 
     private String serializer = SerializerKeys.JDK;
 }
