@@ -63,4 +63,11 @@ public class RegistryTest {
         List<ServiceMetaInfo> serviceMetaInfoList = registry.serviceDiscovery(serviceKey);
         Assert.assertNotNull(serviceMetaInfoList);
     }
+
+    @Test
+    public void heartBeat() throws Exception {
+        register();
+        // See EtcdKeeper, when the TTL reaches around 20, it will be reset to 30, indicating that the heartbeat detection and renewal mechanism is running normally
+        Thread.sleep(60 * 1000L);
+    }
 }
