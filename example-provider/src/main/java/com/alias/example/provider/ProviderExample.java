@@ -10,6 +10,7 @@ import com.alias.registry.Registry;
 import com.alias.registry.RegistryFactory;
 import com.alias.server.HttpServer;
 import com.alias.server.VertxHttpServer;
+import com.alias.server.tcp.VertxTcpServer;
 
 public class ProviderExample {
 
@@ -19,7 +20,7 @@ public class ProviderExample {
 
         // register service
         String serviceName = UserService.class.getName();
-        LocalRegistry.register(UserService.class.getName(), UserServiceImpl.class);
+        LocalRegistry.register(serviceName, UserServiceImpl.class);
 
         // register service to registry
         RpcConfig rpcConfig = RpcApplication.getRpcConfig();
@@ -36,7 +37,10 @@ public class ProviderExample {
         }
 
         // start web service
-        HttpServer httpServer = new VertxHttpServer();
-        httpServer.doStart(8201);
+//        HttpServer httpServer = new VertxHttpServer();
+//        httpServer.doStart(8201);
+        // start TCP service
+        VertxTcpServer vertxTcpServer = new VertxTcpServer();
+        vertxTcpServer.doStart(8201);
     }
 }

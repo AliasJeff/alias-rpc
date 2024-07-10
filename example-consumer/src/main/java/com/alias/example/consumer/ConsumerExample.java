@@ -1,10 +1,8 @@
 package com.alias.example.consumer;
 
-import com.alias.config.RpcConfig;
 import com.alias.example.common.model.User;
 import com.alias.example.common.service.UserService;
 import com.alias.proxy.ServiceProxyFactory;
-import com.alias.utils.ConfigUtils;
 
 /**
  * @author Jeffery
@@ -28,6 +26,6 @@ public class ConsumerExample {
             System.out.println("Failed to get user, user == null");
         }
         long number = userService.getNumber();
-        System.out.println(number);
+        System.out.println("number: " + number);
     }
 }

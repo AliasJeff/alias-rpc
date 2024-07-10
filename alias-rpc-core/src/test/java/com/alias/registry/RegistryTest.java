@@ -41,7 +41,6 @@ public class RegistryTest {
         serviceMetaInfo.setServiceHost("localhost");
         serviceMetaInfo.setServicePort(1000);
         registry.register(serviceMetaInfo);
-        System.out.println("xxxxxxxx");
     }
 
     @Test

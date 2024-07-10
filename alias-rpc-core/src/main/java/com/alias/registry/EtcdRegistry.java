@@ -80,7 +80,7 @@ public class EtcdRegistry implements Registry {
     public List<ServiceMetaInfo> serviceDiscovery(String serviceKey) {
         // Read from cache first
         List<ServiceMetaInfo> cachedServiceMetaInfoList = registryServiceCache.readCache();
-        if (cachedServiceMetaInfoList != null) {
+        if (CollUtil.isNotEmpty(cachedServiceMetaInfoList)) {
             return cachedServiceMetaInfoList;
         }
 
