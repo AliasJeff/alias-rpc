@@ -10,6 +10,8 @@ import com.alias.constant.ProtocolConstant;
 import com.alias.constant.RpcConstant;
 import com.alias.enums.ProtocolMessageSerializerEnum;
 import com.alias.enums.ProtocolMessageTypeEnum;
+import com.alias.loadbalancer.LoadBalancer;
+import com.alias.loadbalancer.LoadBalancerFactory;
 import com.alias.model.RpcRequest;
 import com.alias.model.RpcResponse;
 import com.alias.model.ServiceMetaInfo;
@@ -28,7 +30,9 @@ import io.vertx.core.net.NetClient;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static com.alias.server.tcp.VertxTcpClient.doRequest;
@@ -63,8 +67,13 @@ public class ServiceProxy implements InvocationHandler {
             if (CollUtil.isEmpty(serviceMetaInfoList)) {
                 throw new RuntimeException("No service available");
             }
-            // TODO Load balancing strategy
-            ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
+
+            // Load balancing
+            LoadBalancer loadBalancer = LoadBalancerFactory.getInstance(rpcConfig.getLoadBalancer());
+            Map<String, Object> requestParams = new HashMap<>();
+            requestParams.put("methodName", rpcRequest.getMethodName());
+            ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfoList);
+
             // Send TCP request
             RpcResponse rpcResponse = doRequest(rpcRequest, selectedServiceMetaInfo);
             return rpcResponse.getData();

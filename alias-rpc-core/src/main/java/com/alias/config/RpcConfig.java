@@ -1,5 +1,6 @@
 package com.alias.config;
 
+import com.alias.loadbalancer.LoadBalancerKeys;
 import com.alias.serializer.SerializerKeys;
 import lombok.Data;
 
@@ -27,4 +28,6 @@ public class RpcConfig {
     private RegistryConfig registryConfig = new RegistryConfig();
 
     private String serializer = SerializerKeys.JDK;
+
+    private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
 }
