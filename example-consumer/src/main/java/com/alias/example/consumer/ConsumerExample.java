@@ -1,5 +1,6 @@
 package com.alias.example.consumer;
 
+import com.alias.bootstrap.ConsumerBootstrap;
 import com.alias.example.common.model.User;
 import com.alias.example.common.service.UserService;
 import com.alias.proxy.ServiceProxyFactory;
@@ -10,8 +11,8 @@ import com.alias.proxy.ServiceProxyFactory;
 public class ConsumerExample {
 
     public static void main(String[] args) {
-        // Create a new proxy UserService instance (static)
-        // UserService userService = new UserServiceProxy();
+
+        ConsumerBootstrap.init();
 
         // Create a new proxy UserService instance (dynamic)
         UserService userService = ServiceProxyFactory.getProxy(UserService.class);
