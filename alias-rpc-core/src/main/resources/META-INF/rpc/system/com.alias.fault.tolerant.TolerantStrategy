@@ -1,0 +1,4 @@
+failBack=com.alias.fault.tolerant.FailBackTolerantStrategy
+failOver=com.alias.fault.tolerant.FailOverTolerantStrategy
+failFast=com.alias.fault.tolerant.FailFastTolerantStrategy
+failSafe=com.alias.fault.tolerant.FailSafeTolerantStrategy

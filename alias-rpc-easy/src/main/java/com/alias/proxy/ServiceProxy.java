@@ -36,7 +36,7 @@ public class ServiceProxy implements InvocationHandler {
             byte[] bodyBytes = serializer.serialize(rpcRequest);
             byte[] result;
             // TODO Address hard coded here, use the service discovery component to obtain the service address
-            try (HttpResponse httpResponse = HttpRequest.post("http://localhost:8201")
+            try (HttpResponse httpResponse = HttpRequest.post("http://localhost:8801")
                     .body(bodyBytes)
                     .execute()) {
                 result = httpResponse.bodyBytes();

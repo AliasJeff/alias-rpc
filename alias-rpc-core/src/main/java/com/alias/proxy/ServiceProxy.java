@@ -6,6 +6,8 @@ import com.alias.config.RpcConfig;
 import com.alias.constant.RpcConstant;
 import com.alias.fault.retry.RetryStrategy;
 import com.alias.fault.retry.RetryStrategyFactory;
+import com.alias.fault.tolerant.TolerantStrategy;
+import com.alias.fault.tolerant.TolerantStrategyFactory;
 import com.alias.loadbalancer.LoadBalancer;
 import com.alias.loadbalancer.LoadBalancerFactory;
 import com.alias.model.RpcRequest;
@@ -42,6 +44,7 @@ public class ServiceProxy implements InvocationHandler {
                 .args(args)
                 .build();
 
+        RpcResponse rpcResponse;
         try {
             RpcConfig rpcConfig = RpcApplication.getRpcConfig();
             Registry registry = RegistryFactory.getInstance(rpcConfig.getRegistryConfig().getRegistry());
@@ -61,12 +64,13 @@ public class ServiceProxy implements InvocationHandler {
 
             // Retry Strategy, Send TCP request
             RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
-            RpcResponse rpcResponse = retryStrategy.doRetry(() -> doRequest(rpcRequest, selectedServiceMetaInfo));
-
-            return rpcResponse.getData();
+            rpcResponse = retryStrategy.doRetry(() -> doRequest(rpcRequest, selectedServiceMetaInfo));
 
         } catch (Exception e) {
-            throw new RuntimeException("Failed to send request", e);
+            TolerantStrategy tolerantStrategy = TolerantStrategyFactory.getInstance(RpcApplication.getRpcConfig().getTolerantStrategy());
+            rpcResponse = tolerantStrategy.doTolerant(null, e);
         }
+
+        return rpcResponse.getData();
     }
 }

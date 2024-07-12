@@ -19,6 +19,6 @@ public class EasyProviderExample {
 
         // start web service
         HttpServer httpServer = new VertxHttpServer();
-        httpServer.doStart(8201);
+        httpServer.doStart(8801);
     }
 }

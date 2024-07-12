@@ -38,9 +38,9 @@ public class ProviderExample {
 
         // start web service
 //        HttpServer httpServer = new VertxHttpServer();
-//        httpServer.doStart(8201);
+//        httpServer.doStart(8801);
         // start TCP service
         VertxTcpServer vertxTcpServer = new VertxTcpServer();
-        vertxTcpServer.doStart(8201);
+        vertxTcpServer.doStart(8801);
     }
 }

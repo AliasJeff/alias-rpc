@@ -1,6 +1,7 @@
 package com.alias.config;
 
 import com.alias.fault.retry.RetryStrategyKeys;
+import com.alias.fault.tolerant.TolerantStrategyKeys;
 import com.alias.loadbalancer.LoadBalancerKeys;
 import com.alias.serializer.SerializerKeys;
 import lombok.Data;
@@ -19,7 +20,7 @@ public class RpcConfig {
 
     private String serverHost = "localhost";
 
-    private Integer serverPort = 8201;
+    private Integer serverPort = 8801;
 
     private boolean mock = false;
 
@@ -33,4 +34,6 @@ public class RpcConfig {
     private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
 
     private String retryStrategy = RetryStrategyKeys.NO;
+
+    private String tolerantStrategy = TolerantStrategyKeys.FAIL_FAST;
 }
