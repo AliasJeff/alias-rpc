@@ -1,0 +1,81 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.banner {
+  position: absolute;
+  top: 50px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Container layout */
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  gap: 20px 40px;
+}
+
+/* Left Sidebar */
+.sidebar {
+  width: 250px;
+  height: 800px;
+  background-color: #f4f4f4;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar .ant-list-item {
+  margin-bottom: 12px;
+}
+
+/* Right Content Area */
+.content {
+  height: 800px;
+  width: 800px;
+  flex: 1;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: auto;
+}
+
+.content pre {
+  background-color: #f7f7f7;
+  padding: 16px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.content .ant-typography {
+  margin-bottom: 16px;
+}
+
+.content .ant-card {
+  margin-top: 16px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .sidebar {
+    width: 100%;
+    box-shadow: none;
+  }
+
+  .content {
+    width: 100%;
+  }
+}
