@@ -60,7 +60,9 @@ public class VertxTcpClient {
                                             (ProtocolMessage<RpcResponse>) ProtocolMessageDecoder.decode(buffer);
                                     responseFuture.complete(rpcResponseProtocolMessage.getBody());
                                 } catch (IOException e) {
-                                    throw new RuntimeException("Decode response error", e);
+                                    log.error("Decode response error", e);
+                                    responseFuture.completeExceptionally(e);
+                                    socket.close();
                                 }
                             }
                     );

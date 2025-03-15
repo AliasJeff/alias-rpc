@@ -3,7 +3,7 @@ package com.alias.example.consumer;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.alias.example.common.model.User;
-import com.alias.example.common.service.UserService;
+import com.alias.example.common.service.ApiService;
 import com.alias.model.RpcRequest;
 import com.alias.model.RpcResponse;
 import com.alias.serializer.JdkSerializer;
@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * UserService static proxy
  */
-public class UserServiceProxy implements UserService {
+public class ApiServiceProxy implements ApiService {
 
     @Override
     public User getUser(User user) {
@@ -23,7 +23,7 @@ public class UserServiceProxy implements UserService {
 
         // request
         RpcRequest rpcRequest = RpcRequest.builder()
-                .serviceName(UserService.class.getName())
+                .serviceName(ApiService.class.getName())
                 .methodName("getUser")
                 .parameterTypes(new Class[]{User.class})
                 .args(new Object[]{user})

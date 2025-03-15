@@ -1,7 +1,7 @@
 package com.alias.example.consumer;
 
 import com.alias.example.common.model.User;
-import com.alias.example.common.service.UserService;
+import com.alias.example.common.service.ApiService;
 import com.alias.proxy.ServiceProxyFactory;
 
 /**
@@ -16,12 +16,12 @@ public class EasyConsumerExample {
         // UserService userService = new UserServiceProxy();
 
         // Create a new proxy UserService instance (dynamic)
-        UserService userService = ServiceProxyFactory.getProxy(UserService.class);
+        ApiService apiService = ServiceProxyFactory.getProxy(ApiService.class);
 
         User user = new User();
         user.setName("Jeffery");
         // Call the getUser method
-        User newUser = userService.getUser(user);
+        User newUser = apiService.getUser(user);
         if (newUser != null) {
             System.out.println("New user：" + newUser.getName());
         } else {
