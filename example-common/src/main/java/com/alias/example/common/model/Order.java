@@ -6,20 +6,17 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-/**
- * User model
- *
- * @author Jeffery
- */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class User implements Serializable {
+@NoArgsConstructor
+public class Order implements Serializable {
 
-    private Long id;
+    private Long userId;
 
-    private String name;
+    private Long orderId;
 
-    private String email;
+    private String productName;
+
+    private int quantity;
 
 }
