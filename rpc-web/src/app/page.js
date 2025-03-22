@@ -1,8 +1,8 @@
 "use client"; // This is a client component
 
 import React, { useState } from "react";
-import { Button, List, Card, Spin, Typography, Row, Col, Tag } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import { Button, List, Card, Spin, Typography, Row, Col, Tag, Select } from "antd";
+import {CodeOutlined, DatabaseOutlined, LoadingOutlined, RetweetOutlined, SafetyOutlined} from "@ant-design/icons";
 import axios from 'axios';
 import styles from "./page.module.css";
 
@@ -31,6 +31,10 @@ export default function Home() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [executionTime, setExecutionTime] = useState(null);
+  const [rpcType, setRpcType] = useState("AliasRPC");
+  const [serializer, setSerializer] = useState("JSON");
+  const [retryStrategy, setRetryStrategy] = useState("Fixed");
+  const [faultTolerance, setFaultTolerance] = useState("Failover");
 
   const handleApiCall = async (endpoint, method, hasParams) => {
     setLoading(true);
@@ -75,6 +79,43 @@ export default function Home() {
   return (
     <div className={styles.wrapper}>
       <div className={styles.banner}>Alias RPC Framework - Demo Page</div>
+      <div className={styles.configBar}>
+        <Row gutter={16} align="middle">
+          <Col>
+            <Typography.Text strong><CodeOutlined /> RPC Type: </Typography.Text>
+            <Select value={rpcType} onChange={setRpcType} options={[
+              { label: "AliasRPC", value: "AliasRPC" },
+              { label: "gRPC", value: "gRPC" },
+            ]} />
+          </Col>
+          <Col>
+            <Typography.Text strong><DatabaseOutlined /> Serializer: </Typography.Text>
+            <Select value={serializer} onChange={setSerializer} options={[
+              { label: "JSON", value: "JSON" },
+              { label: "JDK", value: "JDK" },
+              { label: "Kryo", value: "Kryo" },
+              { label: "Hessian", value: "Hessian" }
+            ]} />
+          </Col>
+          <Col>
+            <Typography.Text strong><RetweetOutlined /> Retry Strategy: </Typography.Text>
+            <Select value={retryStrategy} onChange={setRetryStrategy} options={[
+              { label: "None", value: "None" },
+              { label: "Fixed", value: "Fixed" },
+              { label: "Random", value: "Random" }
+            ]} />
+          </Col>
+          <Col>
+            <Typography.Text strong><SafetyOutlined /> Fault Tolerance: </Typography.Text>
+            <Select value={faultTolerance} onChange={setFaultTolerance} options={[
+              { label: "Fail Over", value: "Fail Over" },
+              { label: "Fast Fail", value: "Fast Fail" },
+              { label: "Fallback", value: "Fallback" },
+              { label: "Fail Safe", value: "Fail Safe" }
+            ]} />
+          </Col>
+        </Row>
+      </div>
       <div className={styles.container}>
 
         {/* 左侧 API 列表 */}
