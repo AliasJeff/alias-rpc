@@ -4,10 +4,12 @@ import com.alias.example.common.model.Order;
 import com.alias.example.common.model.User;
 import com.alias.example.common.service.ApiService;
 import com.alias.rpc.springboot.starter.annotation.RpcReference;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 public class ExampleController {
 
@@ -16,12 +18,18 @@ public class ExampleController {
 
     @GetMapping("/user")
     public User getUserInfoById(@RequestParam Long userId) {
-        return apiService.getUserById(userId);
+        log.info("[getUserInfoById] Starting to fetch user info for userId: {}", userId);
+        User user = apiService.getUserById(userId);
+        log.info("[getUserInfoById] Executed successfully, parameter: {}, result: {}", userId, user);
+        return user;
     }
 
     @PostMapping("/orders")
     public List<Order> fetchOrdersByUserId(@RequestBody Order order) {
-        return apiService.getOrdersByUserId(order.getUserId());
+        log.info("[fetchOrdersByUserId] Starting to fetch orders for userId: {}", order.getUserId());
+        List<Order> orders = apiService.getOrdersByUserId(order.getUserId());
+        log.info("[fetchOrdersByUserId] Executed successfully, parameter: {}, result: {}", order.getUserId(), orders);
+        return orders;
     }
 
 }

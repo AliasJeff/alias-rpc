@@ -12,7 +12,6 @@ import io.etcd.jetcd.options.GetOption;
 import io.etcd.jetcd.options.PutOption;
 import io.etcd.jetcd.watch.WatchEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.zookeeper.WatchedEvent;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -20,8 +19,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static io.netty.util.ThreadDeathWatcher.watch;
 
 @Slf4j
 public class EtcdRegistry implements Registry {
@@ -67,6 +64,7 @@ public class EtcdRegistry implements Registry {
 
         // Add the key to the local register node set
         localRegisterNodeKeySet.add(registerKey);
+        log.info("Registered service: {}, key: {}", serviceMetaInfo, registerKey);
     }
 
     @Override
@@ -74,6 +72,7 @@ public class EtcdRegistry implements Registry {
         String registerKey = ETCD_ROOT_PATH + serviceMetaInfo.getServiceNodeKey();
         kvClient.delete(ByteSequence.from(registerKey, StandardCharsets.UTF_8));
         localRegisterNodeKeySet.remove(registerKey);
+        log.info("Unregistered service: {}, key: {}", serviceMetaInfo, registerKey);
     }
 
     @Override

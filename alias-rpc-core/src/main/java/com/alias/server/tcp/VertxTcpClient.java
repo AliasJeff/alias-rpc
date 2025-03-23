@@ -27,51 +27,55 @@ public class VertxTcpClient {
         Vertx vertx = Vertx.vertx();
         NetClient netClient = vertx.createNetClient();
         CompletableFuture<RpcResponse> responseFuture = new CompletableFuture<>();
-        netClient.connect(serviceMetaInfo.getServicePort(), serviceMetaInfo.getServiceHost(),
-                result -> {
-                    if (!result.succeeded()) {
-                        log.error("Failed to connect to TCP server");
-                        return;
-                    }
-                    log.info("Connected to TCP server");
-                    io.vertx.core.net.NetSocket socket = result.result();
+        try {
+            netClient.connect(serviceMetaInfo.getServicePort(), serviceMetaInfo.getServiceHost(),
+                    result -> {
+                        if (!result.succeeded()) {
+                            log.error("Failed to connect to TCP server");
+                            return;
+                        }
+                        log.info("Connected to TCP server");
+                        io.vertx.core.net.NetSocket socket = result.result();
 
-                    ProtocolMessage<RpcRequest> protocolMessage = new ProtocolMessage<>();
-                    ProtocolMessage.Header header = new ProtocolMessage.Header();
-                    header.setMagic(ProtocolConstant.PROTOCOL_MAGIC);
-                    header.setVersion(ProtocolConstant.PROTOCOL_VERSION);
-                    header.setSerializer((byte) ProtocolMessageSerializerEnum.getEnumByValue(RpcApplication.getRpcConfig().getSerializer()).getKey());
-                    header.setType((byte) ProtocolMessageTypeEnum.REQUEST.getKey());
-                    header.setRequestId(IdUtil.getSnowflakeNextId());
-                    protocolMessage.setHeader(header);
-                    protocolMessage.setBody(rpcRequest);
+                        ProtocolMessage<RpcRequest> protocolMessage = new ProtocolMessage<>();
+                        ProtocolMessage.Header header = new ProtocolMessage.Header();
+                        header.setMagic(ProtocolConstant.PROTOCOL_MAGIC);
+                        header.setVersion(ProtocolConstant.PROTOCOL_VERSION);
+                        header.setSerializer((byte) ProtocolMessageSerializerEnum.getEnumByValue(RpcApplication.getRpcConfig().getSerializer()).getKey());
+                        header.setType((byte) ProtocolMessageTypeEnum.REQUEST.getKey());
+                        header.setRequestId(IdUtil.getSnowflakeNextId());
+                        protocolMessage.setHeader(header);
+                        protocolMessage.setBody(rpcRequest);
 
-                    try {
-                        Buffer encodeBuffer = ProtocolMessageEncoder.encode(protocolMessage);
-                        socket.write(encodeBuffer);
-                    } catch (IOException e) {
-                        throw new RuntimeException("Encode request error", e);
-                    }
+                        try {
+                            Buffer encodeBuffer = ProtocolMessageEncoder.encode(protocolMessage);
+                            socket.write(encodeBuffer);
+                        } catch (IOException e) {
+                            throw new RuntimeException("Encode request error", e);
+                        }
 
-                    TcpBufferHandlerWrapper bufferHandlerWrapper = new TcpBufferHandlerWrapper(
-                            buffer -> {
-                                try {
-                                    ProtocolMessage<RpcResponse> rpcResponseProtocolMessage =
-                                            (ProtocolMessage<RpcResponse>) ProtocolMessageDecoder.decode(buffer);
-                                    responseFuture.complete(rpcResponseProtocolMessage.getBody());
-                                } catch (IOException e) {
-                                    log.error("Decode response error", e);
-                                    responseFuture.completeExceptionally(e);
-                                    socket.close();
+                        TcpBufferHandlerWrapper bufferHandlerWrapper = new TcpBufferHandlerWrapper(
+                                buffer -> {
+                                    try {
+                                        ProtocolMessage<RpcResponse> rpcResponseProtocolMessage =
+                                                (ProtocolMessage<RpcResponse>) ProtocolMessageDecoder.decode(buffer);
+                                        responseFuture.complete(rpcResponseProtocolMessage.getBody());
+                                    } catch (IOException e) {
+                                        log.error("Decode response error", e);
+                                        responseFuture.completeExceptionally(e);
+                                    } finally {
+                                        socket.close();
+                                    }
                                 }
-                            }
-                    );
-                    socket.handler(bufferHandlerWrapper);
-                });
-        RpcResponse rpcResponse = responseFuture.get();
+                        );
+                        socket.handler(bufferHandlerWrapper).closeHandler(v ->
+                                socket.close());
+                    });
 
-        // Close the connection
-        netClient.close();
-        return rpcResponse;
+            return responseFuture.get();
+        } finally {
+            // Close the connection
+            netClient.close();
+        }
     }
 }

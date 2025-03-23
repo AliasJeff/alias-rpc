@@ -55,6 +55,6 @@ public class TcpServerHandler implements Handler<NetSocket> {
             }
 
         });
-        netSocket.handler(bufferHandlerWrapper);
+        netSocket.handler(bufferHandlerWrapper).closeHandler(v -> netSocket.close());
     }
 }
