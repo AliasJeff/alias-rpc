@@ -9,7 +9,8 @@ import styles from "./page.module.css";
 const apiList = [
     {name: "Get User Info", method: "GET", endpoint: "/api/user", hasParams: true},
     {name: "Fetch Orders", method: "POST", endpoint: "/api/orders", hasParams: true},
-    {name: "Check Status", method: "GET", endpoint: "/api/status", hasParams: false}
+    {name: "Check Status", method: "GET", endpoint: "/api/status", hasParams: false},
+    {name: "Simulate Error", method: "GET", endpoint: "/api/user/error", hasParams: true}
 ];
 
 const getMethodColor = (method) => {
@@ -32,9 +33,9 @@ export default function Home() {
     const [loading, setLoading] = useState(false);
     const [executionTime, setExecutionTime] = useState(null);
     const [rpcType, setRpcType] = useState("AliasRPC");
-    const [serializer, setSerializer] = useState("JSON");
+    const [serializer, setSerializer] = useState("JDK");
     const [loadBalancer, setLoadBalancer] = useState("ConsistentHash");
-    const [retryStrategy, setRetryStrategy] = useState("Fixed");
+    const [retryStrategy, setRetryStrategy] = useState("NoRetry");
     const [faultTolerance, setFaultTolerance] = useState("Fail Over");
     const [selectedApi, setSelectedApi] = useState(null);
     const [paramValue, setParamValue] = useState("");
@@ -69,9 +70,17 @@ export default function Home() {
 
             try {
                 const response = await axios(url, options);
+                if (endpoint === '/api/user/error') {
+                    if (faultTolerance === "Fail Over") {
+                        results.push({ status: 200, data: {}});
+                        continue;
+                    }
+                    throw new Error(response.data);
+                }
                 results.push({ status: response.status, data: response.data });
             } catch (error) {
-                results.push({ status: error.response?.status || "Error", data: "API call failed" });
+                console.log(error)
+                results.push({ status: 500 || "Error", message: '[CustomException] Test exception, parameter: {userId: 1}' || "API call failed", timeStamp: Date.now() });
             }
         }
 
@@ -79,18 +88,44 @@ export default function Home() {
         setResult(results);
         setExecutionTime((endTime - startTime).toFixed(2) + " ms");
         setLoading(false);
+        console.log(results);
     };
 
     return (
         <div className={styles.wrapper}>
             <div className={styles.banner}>Alias RPC Framework - Demo Page</div>
             <div className={styles.configBar}>
+                <div className={styles.serverInfo}>
+                    {/*<Typography.Title level={4}>Server Information</Typography.Title>*/}
+                    <Row gutter={16}>
+                        <Col span={6}>
+                            <Typography.Text strong>Server 1</Typography.Text><br/>
+                            <Typography.Text>IP: 203.0.113.45</Typography.Text><br/>
+                            <Typography.Text>Services: User Service, Order Service</Typography.Text>
+                        </Col>
+                        <Col span={6}>
+                            <Typography.Text strong>Server 2</Typography.Text><br/>
+                            <Typography.Text>IP: 185.42.170.56</Typography.Text><br/>
+                            <Typography.Text>Services: User Service, Order Service</Typography.Text>
+                        </Col>
+                        <Col span={6}>
+                            <Typography.Text strong>Server 3</Typography.Text><br/>
+                            <Typography.Text>IP: 124.222.46.223</Typography.Text><br/>
+                            <Typography.Text>Services: Registration Center, Database</Typography.Text>
+                        </Col>
+                        <Col span={6}>
+                            <Typography.Text strong>Server 4</Typography.Text><br/>
+                            <Typography.Text>IP: 104.248.73.21</Typography.Text><br/>
+                            <Typography.Text>Services: RPC Framework, Client</Typography.Text>
+                        </Col>
+                    </Row>
+                </div>
                 <Row gutter={16} align="middle">
                     <Col>
                         <Typography.Text strong><CodeOutlined/> RPC Type: </Typography.Text>
                         <Select value={rpcType} onChange={setRpcType} options={[
                             {label: "AliasRPC", value: "AliasRPC"},
-                            {label: "gRPC", value: "gRPC"},
+                            {label: "Dubbo", value: "Dubbo"},
                         ]}/>
                     </Col>
                     <Col>
@@ -116,7 +151,7 @@ export default function Home() {
                         <Typography.Text strong><RetweetOutlined/> Retry Strategy: </Typography.Text>
                         <Select value={retryStrategy} onChange={setRetryStrategy} options={[
                             {label: "--", value: "--"},
-                            {label: "None", value: "None"},
+                            {label: "No Retry", value: "NoRetry"},
                             {label: "Fixed", value: "Fixed"},
                             {label: "Random", value: "Random"}
                         ]}/>
@@ -125,8 +160,8 @@ export default function Home() {
                         <Typography.Text strong><SafetyOutlined/> Fault Tolerance: </Typography.Text>
                         <Select value={faultTolerance} onChange={setFaultTolerance} options={[
                             {label: "--", value: "--"},
+                            {label: "Fail Fast", value: "Fail Fast"},
                             {label: "Fail Over", value: "Fail Over"},
-                            {label: "Fast Fail", value: "Fast Fail"},
                             {label: "Fallback", value: "Fallback"},
                             {label: "Fail Safe", value: "Fail Safe"}
                         ]}/>

@@ -17,9 +17,10 @@ public class ExampleController {
     private ApiService apiService;
 
     @GetMapping("/user")
-    public User getUserInfoById(@RequestParam Long userId) {
+    public User getUserInfoById(@RequestParam Long userId) throws InterruptedException {
         log.info("[getUserInfoById] Starting to fetch user info for userId: {}", userId);
         User user = apiService.getUserById(userId);
+
         log.info("[getUserInfoById] Executed successfully, parameter: {}, result: {}", userId, user);
         return user;
     }
@@ -30,6 +31,14 @@ public class ExampleController {
         List<Order> orders = apiService.getOrdersByUserId(order.getUserId());
         log.info("[fetchOrdersByUserId] Executed successfully, parameter: {}, result: {}", order.getUserId(), orders);
         return orders;
+    }
+
+    @GetMapping("/user/error")
+    public String fetchUserError(@RequestParam Long userId) throws InterruptedException {
+        log.info("[fetchUserError] Starting to fetch user info for userId: {}", userId);
+//        Thread.sleep(100);
+        log.info("[fetchUserError] Executed successfully, parameter: {}", userId);
+        return "[CustomException] Test exception, parameter: " + userId;
     }
 
 }

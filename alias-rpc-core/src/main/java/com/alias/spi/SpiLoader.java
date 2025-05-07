@@ -20,12 +20,12 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class SpiLoader {
 
-    private static Map<String, Map<String, Class<?>>> loaderMap = new ConcurrentHashMap<>();
+    private static final Map<String, Map<String, Class<?>>> loaderMap = new ConcurrentHashMap<>();
 
     /**
      * Instance cache, avoid creating duplicate instances
      */
-    private static Map<String, Object> instanceCache = new ConcurrentHashMap<>();
+    private static final Map<String, Object> instanceCache = new ConcurrentHashMap<>();
 
     /**
      * System SPI directory

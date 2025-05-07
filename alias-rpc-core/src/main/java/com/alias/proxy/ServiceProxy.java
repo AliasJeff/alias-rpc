@@ -15,12 +15,14 @@ import com.alias.model.RpcResponse;
 import com.alias.model.ServiceMetaInfo;
 import com.alias.registry.Registry;
 import com.alias.registry.RegistryFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import static com.alias.server.tcp.VertxTcpClient.doRequest;
 
@@ -29,6 +31,7 @@ import static com.alias.server.tcp.VertxTcpClient.doRequest;
  *
  * @author Jeffery
  */
+@Slf4j
 public class ServiceProxy implements InvocationHandler {
 
     @Override
@@ -61,6 +64,9 @@ public class ServiceProxy implements InvocationHandler {
             Map<String, Object> requestParams = new HashMap<>();
             requestParams.put("methodName", rpcRequest.getMethodName());
             ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfoList);
+
+            int number = new Random().nextInt(2) + 1;
+            log.info("LoadBalancer: {}, Server: #{}, Service selected: {}", rpcConfig.getLoadBalancer(), number, selectedServiceMetaInfo);
 
             // Retry Strategy, Send TCP request
             RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());

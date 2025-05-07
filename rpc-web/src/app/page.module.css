@@ -13,6 +13,10 @@
   font-weight: bold;
 }
 
+.serverInfo {
+  margin-bottom: 20px;
+}
+
 /* Container layout */
 .container {
   display: flex;
